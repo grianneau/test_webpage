@@ -3,7 +3,7 @@
   <head>
     <meta http-equiv="content-type" content="text/html;charset=utf-8" />
     <meta name="description" content="An Online IDE for the Coq Theorem Prover" />
-    <link rel="icon" href="../ui-images/favicon.png">
+    <link rel="icon" href="./node_modules/jscoq/ui-images/favicon.png">
 
     <title>jsCoq – The Coq Theorem Prover Online IDE</title>
     <style>
@@ -21,7 +21,7 @@
   </div>
 
   <script type="module">
-    import { JsCoq } from "../jscoq.js";
+    import { JsCoq } from "./node_modules/jscoq/jscoq.js";
 
     var sp = new URLSearchParams(location.search),
         panel_theme = sp.has('dark') ? 'dark' : sp.get('theme') || 'light',
