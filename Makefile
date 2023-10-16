@@ -2,7 +2,7 @@
 
 COQDOC_AUTO=coqdoc.css
 
-FILES=tutorial
+FILES=index
 FILES_HTML=$(addsuffix .html,$(FILES))
 
 all: $(FILES_HTML)

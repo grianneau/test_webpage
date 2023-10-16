@@ -1,0 +1,666 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <script src="./node_modules/wacoq/ui-js/jscoq-loader.js" type="module"></script>
+<script src="./jscoq-agent.js" type="module"></script>
+<link href="./node_modules/wacoq/ui-css/jscoqdoc.css" rel="stylesheet" type="text/css" />
+  <title>index.v</title>
+</head>
+<body>
+<div id="page">
+<div id="header"></div>
+<div id="main" class="jscoqdoc">
+<div class="code">
+</div>
+
+<div class="doc">
+<a id="lab1"></a><h1 class="section">A one-hour tutorial with the Coq proof assistant</h1>
+
+
+<div class="paragraph"> </div>
+
+The purpose of this tutorial is to give a practical glimpse of the proof assistant Coq, in less that one hour :O.
+
+<div class="paragraph"> </div>
+
+Hopefully, you can run code in this same page you are currently reading in your web browser.
+It is possible to add some code or edit it in this same page, at any line. Feel free to experiment! 
+
+<div class="paragraph"> </div>
+
+The following command loads the SSReflect plugin and activates the SSReflect set of tactics. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">Coq</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="http://coq.inria.fr/distrib/V8.16.1/stdlib//Coq.ssr.ssreflect.html#"><span class="id" title="library">ssreflect</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+With this set of tactics, one can achieve the same formal proofs with fewer tactics to know.
+<div class="paragraph"> </div>
+
+<a id="lab2"></a><h1 class="section">A few properties involving lists</h1>
+
+You are probably looking forward to see some proof scripts in action. We are going replay some little proof scripts around lists.
+Therefore, we need a definition of lists. Lists are already defined in the standard library of Coq. One can import some definitions and results about lists with the command <span class="inlinecode"><span class="id" title="keyword">From</span></span> <span class="inlinecode"><span class="id" title="var">Coq</span></span> <span class="inlinecode"><span class="id" title="keyword">Require</span></span> <span class="inlinecode"><span class="id" title="keyword">Import</span></span> <span class="inlinecode"><span class="id" title="var">List</span></span>. 
+
+<div class="paragraph"> </div>
+
+Instead, we are going write our own definition. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Section</span> <a id="OurLists" class="idref" href="#OurLists"><span class="id" title="section">OurLists</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Variable</span> (<a id="OurLists.A" class="idref" href="#OurLists.A"><span class="id" title="variable">A</span></a> : <span class="id" title="keyword">Type</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <a id="list" class="idref" href="#list"><span class="id" title="inductive">list</span></a> : <span class="id" title="keyword">Type</span> :=  <br/>
+| <a id="empty" class="idref" href="#empty"><span class="id" title="constructor">empty</span></a> : <a class="idref" href="index.html#list:2"><span class="id" title="inductive">list</span></a> <br/>
+| <a id="add" class="idref" href="#add"><span class="id" title="constructor">add</span></a> : <a class="idref" href="index.html#OurLists.A"><span class="id" title="variable">A</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.16.1/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="index.html#list:2"><span class="id" title="inductive">list</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.16.1/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="index.html#list:2"><span class="id" title="inductive">list</span></a>.<br/>
+</div>
+
+<div class="doc">
+<a id="lab3"></a><h2 class="section">The type system</h2>
+
+The Coq proof assistant is based on the Calculus of Constructions.
+In this proof assistant, any object (we should rather say term) has a type.
+One can check the type of an object (we should rather say "term") with the <span class="inlinecode"><span class="id" title="keyword">Check</span></span> command, for example: 
+</div>
+<div class="code">
+<span class="id" title="keyword">Check</span> <a class="idref" href="index.html#add"><span class="id" title="constructor">add</span></a>.<br/>
+</div>
+
+<div class="doc">
+The answer to this last command means that the constant <span class="inlinecode"><span class="id" title="var">add</span></span> has type <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">→</span> <span class="inlinecode"><span class="id" title="var">list</span></span> <span class="inlinecode">→</span> <span class="inlinecode"><span class="id" title="var">list</span></span>.
+In other words, the constant <span class="inlinecode"><span class="id" title="var">add</span></span> is a function that eats a first argument of type <span class="inlinecode"><span class="id" title="var">A</span></span>, then eats a second argument of type <span class="inlinecode"><span class="id" title="var">list</span></span>. The output value has type <span class="inlinecode"><span class="id" title="var">list</span></span>.
+We also say that <span class="inlinecode"><span class="id" title="var">add</span></span> inhabits <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">→</span> <span class="inlinecode"><span class="id" title="var">list</span></span> <span class="inlinecode">→</span> <span class="inlinecode"><span class="id" title="var">list</span></span>. 
+We also say that <span class="inlinecode"><span class="id" title="var">add</span></span> is an inhabitant of <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">→</span> <span class="inlinecode"><span class="id" title="var">list</span></span> <span class="inlinecode">→</span> <span class="inlinecode"><span class="id" title="var">list</span></span>.
+We also say that <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">→</span> <span class="inlinecode"><span class="id" title="var">list</span></span> <span class="inlinecode">→</span> <span class="inlinecode"><span class="id" title="var">list</span></span> is inhabitated by <span class="inlinecode"><span class="id" title="var">add</span></span>.
+We also write <span class="inlinecode"><span class="id" title="var">add</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">→</span> <span class="inlinecode"><span class="id" title="var">list</span></span> <span class="inlinecode">→</span> <span class="inlinecode"><span class="id" title="var">list</span></span>.
+The type itself has a type. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Check</span> <a class="idref" href="index.html#OurLists.A"><span class="id" title="variable">A</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.16.1/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="index.html#list"><span class="id" title="inductive">list</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.16.1/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="index.html#list"><span class="id" title="inductive">list</span></a>.<br/>
+<span class="id" title="keyword">Check</span> <span class="id" title="keyword">Type</span>.<br/>
+<span class="id" title="keyword">Check</span> <a class="idref" href="index.html#list"><span class="id" title="inductive">list</span></a>.<br/>
+<span class="id" title="keyword">Check</span> <a class="idref" href="index.html#OurLists.A"><span class="id" title="variable">A</span></a>.<br/>
+<span class="id" title="keyword">Check</span> <a class="idref" href="index.html#add"><span class="id" title="constructor">add</span></a>.<br/>
+<span class="id" title="keyword">Check</span> <a class="idref" href="index.html#empty"><span class="id" title="constructor">empty</span></a>.<br/>
+</div>
+
+<div class="doc">
+The <span class="inlinecode"><span class="id" title="keyword">Variable</span></span> command we have used above can be used to add to the context an arbitrary variable with a given type.
+It provides a convenient way to try partial applications and check that they are accepted by the proof assistant. 
+An example of partial application is the term <span class="inlinecode"><span class="id" title="var">add</span></span> <span class="inlinecode"><span class="id" title="var">a</span></span> below. 
+It is called a partial application, because the function <span class="inlinecode"><span class="id" title="var">add</span></span> expects two arguments, but we provide only one. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Section</span> <a id="OurLists.PartialApplicationExample" class="idref" href="#OurLists.PartialApplicationExample"><span class="id" title="section">PartialApplicationExample</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Variable</span> (<a id="OurLists.PartialApplicationExample.a" class="idref" href="#OurLists.PartialApplicationExample.a"><span class="id" title="variable">a</span></a> : <a class="idref" href="index.html#OurLists.A"><span class="id" title="variable">A</span></a>).<br/>
+<span class="id" title="keyword">Variable</span> (<a id="OurLists.PartialApplicationExample.l" class="idref" href="#OurLists.PartialApplicationExample.l"><span class="id" title="variable">l</span></a> : <a class="idref" href="index.html#list"><span class="id" title="inductive">list</span></a>).<br/>
+<span class="id" title="keyword">Check</span> (<a class="idref" href="index.html#add"><span class="id" title="constructor">add</span></a> <a class="idref" href="index.html#OurLists.PartialApplicationExample.a"><span class="id" title="variable">a</span></a>).<br/>
+<span class="id" title="keyword">Check</span> (<a class="idref" href="index.html#add"><span class="id" title="constructor">add</span></a> <a class="idref" href="index.html#OurLists.PartialApplicationExample.a"><span class="id" title="variable">a</span></a> <a class="idref" href="index.html#OurLists.PartialApplicationExample.l"><span class="id" title="variable">l</span></a>).<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="index.html#OurLists.PartialApplicationExample"><span class="id" title="section">PartialApplicationExample</span></a>.<br/>
+<span class="id" title="keyword">Section</span> <a id="OurLists.MorePartialApplication" class="idref" href="#OurLists.MorePartialApplication"><span class="id" title="section">MorePartialApplication</span></a>.<br/>
+<span class="id" title="keyword">Variable</span> (<a id="OurLists.MorePartialApplication.B'" class="idref" href="#OurLists.MorePartialApplication.B'"><span class="id" title="variable">B'</span></a> : <a class="idref" href="index.html#OurLists.A"><span class="id" title="variable">A</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.16.1/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <span class="id" title="keyword">Type</span>).<br/>
+<span class="id" title="keyword">Check</span> (<span class="id" title="keyword">∀</span> (<a id="x:7" class="idref" href="#x:7"><span class="id" title="binder">x</span></a> : <a class="idref" href="index.html#OurLists.A"><span class="id" title="variable">A</span></a>), <a class="idref" href="index.html#OurLists.MorePartialApplication.B'"><span class="id" title="variable">B'</span></a> <a class="idref" href="index.html#x:7"><span class="id" title="variable">x</span></a>).<br/>
+<span class="id" title="keyword">Variable</span> (<a id="OurLists.MorePartialApplication.B" class="idref" href="#OurLists.MorePartialApplication.B"><span class="id" title="variable">B</span></a> : <span class="id" title="keyword">Type</span>).<br/>
+<span class="id" title="keyword">Check</span> (<span class="id" title="keyword">∀</span> (<a id="x:9" class="idref" href="#x:9"><span class="id" title="binder">x</span></a> : <a class="idref" href="index.html#OurLists.A"><span class="id" title="variable">A</span></a>), <a class="idref" href="index.html#OurLists.MorePartialApplication.B"><span class="id" title="variable">B</span></a>).<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="index.html#OurLists.MorePartialApplication"><span class="id" title="section">MorePartialApplication</span></a>.<br/>
+</div>
+
+<div class="doc">
+We see that <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">→</span> <span class="inlinecode"><span class="id" title="var">B</span></span> is a special case of the type <span class="inlinecode"><span class="id" title="keyword">∀</span></span> <span class="inlinecode">(<span class="id" title="var">x</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A</span>),</span> <span class="inlinecode"><span class="id" title="var">B</span></span> where the variable <span class="inlinecode"><span class="id" title="var">x</span></span> does not occur in <span class="inlinecode"><span class="id" title="var">B</span></span>. 
+If a function has one of those types, it consumes an argument of type <span class="inlinecode"><span class="id" title="var">A</span></span> and outputs a value. The type of the output may or may not depend on the argument. In the non-dependent case the output has type <span class="inlinecode"><span class="id" title="var">B</span></span>. In the dependent case, which generalises the dependent case, the output has type <span class="inlinecode"><span class="id" title="var">B</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> for some value <span class="inlinecode"><span class="id" title="var">x</span></span> of type <span class="inlinecode"><span class="id" title="var">A</span></span>. In the dependent case, the type of the output varies according to the input value. 
+<div class="paragraph"> </div>
+
+<a id="lab4"></a><h1 class="section">Inductive type</h1>
+
+The ability to define an inductive type is a mechanism that let one define a new type and ways to create inhabitants of that type. 
+We give the new (inductive) type a name and provide a finite number of constructors.
+After each vertical bar <span class="inlinecode">|</span> is introduced a constructor (see our definition of <span class="inlinecode"><span class="id" title="var">list</span></span>) but the first bar can be ommited.
+Each constructor is given a name and a type (or signature). 
+The ending type of a constructor must be the inductive type that is being defined,
+because once it has consumed each argument, the result is expected to have the new type.
+A constructor may consume no argument (one also says that it has arity 0) as it is the case for the constructor <span class="inlinecode"><span class="id" title="var">empty</span></span>.
+The values inhabitating the inductive type are the only possible values.
+One can visualise a value (belonging to an inductive type) as a finite tree where each node is labeled by one of the constructors. 
+(Indeed, an inductive type can be used to describe the syntax tree of a programming language.)
+The children of the node are the necessary arguments of the constructor.
+
+<div class="paragraph"> </div>
+
+You are invited to try to define your own inductive types! :) 
+For instance, one can define natural numbers, booleans, etc. 
+<div class="paragraph"> </div>
+
+ We now define a function <span class="inlinecode"><span class="id" title="var">concat</span></span> that eats two lists and outputs a list. 
+The output is the concatenation of the lists.
+While being defined, the (name of the) function itself is used in the body of its definition.
+It is said that the function is recursive. 
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Fixpoint</span> <a id="concat" class="idref" href="#concat"><span class="id" title="definition">concat</span></a> (<a id="l:10" class="idref" href="#l:10"><span class="id" title="binder">l</span></a> <a id="m:11" class="idref" href="#m:11"><span class="id" title="binder">m</span></a> : <a class="idref" href="index.html#list"><span class="id" title="inductive">list</span></a>) : <a class="idref" href="index.html#list"><span class="id" title="inductive">list</span></a> :=<br/>
+<span class="id" title="keyword">match</span> <a class="idref" href="index.html#l:10"><span class="id" title="variable">l</span></a> <span class="id" title="keyword">with</span><br/>
+| <a class="idref" href="index.html#empty"><span class="id" title="constructor">empty</span></a> ⇒ <a class="idref" href="index.html#m:11"><span class="id" title="variable">m</span></a><br/>
+| <a class="idref" href="index.html#add"><span class="id" title="constructor">add</span></a> <span class="id" title="var">a</span> <span class="id" title="var">l'</span> ⇒ <a class="idref" href="index.html#add"><span class="id" title="constructor">add</span></a> <span class="id" title="var">a</span> (<a class="idref" href="index.html#concat:12"><span class="id" title="definition">concat</span></a> <span class="id" title="var">l'</span> <a class="idref" href="index.html#m:11"><span class="id" title="variable">m</span></a>)<br/>
+<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+This definition uses a feature called "pattern matching" between the keywords <span class="inlinecode"><span class="id" title="keyword">match</span></span> and <span class="inlinecode"><span class="id" title="keyword">end</span></span>.
+Since <span class="inlinecode"><span class="id" title="var">l</span></span> holds in an inductive type, it can be obtained only though the application of one of the constructors. As a result, one can match it against potential applications of constructors. For instance, in this specific case, a list <span class="inlinecode"><span class="id" title="var">l</span></span> is either <span class="inlinecode"><span class="id" title="var">empty</span></span> or <span class="inlinecode"><span class="id" title="var">add</span></span> <span class="inlinecode"><span class="id" title="var">a</span></span> <span class="inlinecode"><span class="id" title="var">l'</span></span> for some <span class="inlinecode"><span class="id" title="var">a</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A</span></span> and some <span class="inlinecode"><span class="id" title="var">l'</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">list</span></span>. In the body of the function, the argument <span class="inlinecode"><span class="id" title="var">l</span></span> is first matched against <span class="inlinecode"><span class="id" title="var">empty</span></span>. If <span class="inlinecode"><span class="id" title="var">l</span></span> is the value <span class="inlinecode"><span class="id" title="var">empty</span></span> then the function outputs the second argument <span class="inlinecode"><span class="id" title="var">m</span></span>,
+else <span class="inlinecode"><span class="id" title="var">l</span></span> is matched against the pattern <span class="inlinecode"><span class="id" title="var">add</span></span> <span class="inlinecode"><span class="id" title="var">a</span></span> <span class="inlinecode"><span class="id" title="var">l'</span></span>.
+In the latter case, the system tries to fill the variables <span class="inlinecode"><span class="id" title="var">a</span></span> and <span class="inlinecode"><span class="id" title="var">l'</span></span> so that <span class="inlinecode"><span class="id" title="var">add</span></span> <span class="inlinecode"><span class="id" title="var">a</span></span> <span class="inlinecode"><span class="id" title="var">l'</span></span> is <span class="inlinecode"><span class="id" title="var">l</span></span>.
+The order of the patterns matters, because if two or more patterns apply, the first one only is used and the following ones are skipped.
+The pattern matching must be exhaustive - that is at least one pattern can be applied - otherwise the function may not effectively compute. (It may arise that we know that some pattern cases cannot be reached. This can be formally stated and proved afterwards.)
+This exhaustiveness is checked by the proof assistant and it will complain if it cannot see it.
+
+<div class="paragraph"> </div>
+
+ In general, a function may not terminate on some inputs.
+However, the proof assistant Coq let you write only terminating functions. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="var">Fail</span> <span class="id" title="keyword">Fixpoint</span> <a id="non_terminate" class="idref" href="#non_terminate"><span class="id" title="definition">non_terminate</span></a> (<a id="l:14" class="idref" href="#l:14"><span class="id" title="binder">l</span></a> : <a class="idref" href="index.html#list"><span class="id" title="inductive">list</span></a>) : <a class="idref" href="index.html#list"><span class="id" title="inductive">list</span></a> :=<br/>
+<span class="id" title="keyword">match</span> <a class="idref" href="index.html#l:14"><span class="id" title="variable">l</span></a> <span class="id" title="keyword">with</span><br/>
+| <a class="idref" href="index.html#empty"><span class="id" title="constructor">empty</span></a> ⇒ <a class="idref" href="index.html#empty"><span class="id" title="constructor">empty</span></a><br/>
+| <a class="idref" href="index.html#add"><span class="id" title="constructor">add</span></a> <span class="id" title="var">a</span> <span class="id" title="var">l'</span> ⇒ <a class="idref" href="index.html#non_terminate:15"><span class="id" title="definition">non_terminate</span></a> (<a class="idref" href="index.html#add"><span class="id" title="constructor">add</span></a> <span class="id" title="var">a</span> <a class="idref" href="index.html#l:14"><span class="id" title="variable">l</span></a>)<br/>
+<span class="id" title="keyword">end</span>.<br/>
+</div>
+
+<div class="doc">
+It is good news, since we get guarantee of termination for free. In other words, we do not need to formally state and prove the termination.
+There are ways to emulate non-terminating functions, if necessary; this won't be tackled in this page. 
+<div class="paragraph"> </div>
+
+ In the section below, the command <span class="inlinecode"><span class="id" title="keyword">Compute</span></span> is introduced, just to show that it is possible to run computations within the proof assistant. Later, in a similar way, computations will be done within goals (of proofs) with the tactic <span class="inlinecode"><span class="id" title="tactic">rewrite</span></span> <span class="inlinecode">/=</span>. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Section</span> <a id="OurLists.ComputeExample" class="idref" href="#OurLists.ComputeExample"><span class="id" title="section">ComputeExample</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Variables</span> (<a id="OurLists.ComputeExample.a" class="idref" href="#OurLists.ComputeExample.a"><span class="id" title="variable">a</span></a> <a id="OurLists.ComputeExample.b" class="idref" href="#OurLists.ComputeExample.b"><span class="id" title="variable">b</span></a> <a id="OurLists.ComputeExample.c" class="idref" href="#OurLists.ComputeExample.c"><span class="id" title="variable">c</span></a> <a id="OurLists.ComputeExample.d" class="idref" href="#OurLists.ComputeExample.d"><span class="id" title="variable">d</span></a> <a id="OurLists.ComputeExample.e" class="idref" href="#OurLists.ComputeExample.e"><span class="id" title="variable">e</span></a> : <a class="idref" href="index.html#OurLists.A"><span class="id" title="variable">A</span></a>).<br/>
+<span class="id" title="keyword">Check</span> (<a class="idref" href="index.html#add"><span class="id" title="constructor">add</span></a> <a class="idref" href="index.html#OurLists.ComputeExample.a"><span class="id" title="variable">a</span></a> (<a class="idref" href="index.html#add"><span class="id" title="constructor">add</span></a> <a class="idref" href="index.html#OurLists.ComputeExample.b"><span class="id" title="variable">b</span></a> (<a class="idref" href="index.html#add"><span class="id" title="constructor">add</span></a> <a class="idref" href="index.html#OurLists.ComputeExample.c"><span class="id" title="variable">c</span></a> <a class="idref" href="index.html#empty"><span class="id" title="constructor">empty</span></a>))).<br/>
+<span class="id" title="keyword">Compute</span> (<a class="idref" href="index.html#add"><span class="id" title="constructor">add</span></a> <a class="idref" href="index.html#OurLists.ComputeExample.a"><span class="id" title="variable">a</span></a> (<a class="idref" href="index.html#add"><span class="id" title="constructor">add</span></a> <a class="idref" href="index.html#OurLists.ComputeExample.b"><span class="id" title="variable">b</span></a> (<a class="idref" href="index.html#add"><span class="id" title="constructor">add</span></a> <a class="idref" href="index.html#OurLists.ComputeExample.c"><span class="id" title="variable">c</span></a> <a class="idref" href="index.html#empty"><span class="id" title="constructor">empty</span></a>))).<br/>
+<span class="id" title="keyword">Compute</span> (<a class="idref" href="index.html#concat"><span class="id" title="definition">concat</span></a> (<a class="idref" href="index.html#add"><span class="id" title="constructor">add</span></a> <a class="idref" href="index.html#OurLists.ComputeExample.a"><span class="id" title="variable">a</span></a> (<a class="idref" href="index.html#add"><span class="id" title="constructor">add</span></a> <a class="idref" href="index.html#OurLists.ComputeExample.b"><span class="id" title="variable">b</span></a> (<a class="idref" href="index.html#add"><span class="id" title="constructor">add</span></a> <a class="idref" href="index.html#OurLists.ComputeExample.c"><span class="id" title="variable">c</span></a> <a class="idref" href="index.html#empty"><span class="id" title="constructor">empty</span></a>))) <br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a class="idref" href="index.html#add"><span class="id" title="constructor">add</span></a> <a class="idref" href="index.html#OurLists.ComputeExample.d"><span class="id" title="variable">d</span></a> (<a class="idref" href="index.html#add"><span class="id" title="constructor">add</span></a> <a class="idref" href="index.html#OurLists.ComputeExample.e"><span class="id" title="variable">e</span></a> <a class="idref" href="index.html#empty"><span class="id" title="constructor">empty</span></a>))).<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="index.html#OurLists.ComputeExample"><span class="id" title="section">ComputeExample</span></a>.<br/>
+</div>
+
+<div class="doc">
+The concatenation of the lists <span class="inlinecode">[<span class="id" title="var">a</span></span> <span class="inlinecode"><span class="id" title="var">b</span></span> <span class="inlinecode"><span class="id" title="var">c</span>]</span> and <span class="inlinecode">[<span class="id" title="var">d</span></span> <span class="inlinecode"><span class="id" title="var">e</span>]</span> results in the list <span class="inlinecode">[<span class="id" title="var">a</span></span> <span class="inlinecode"><span class="id" title="var">b</span></span> <span class="inlinecode"><span class="id" title="var">c</span></span> <span class="inlinecode"><span class="id" title="var">d</span></span> <span class="inlinecode"><span class="id" title="var">e</span>]</span>. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Check</span> (<span class="id" title="keyword">∀</span> (<a id="l:22" class="idref" href="#l:22"><span class="id" title="binder">l</span></a> <a id="m:23" class="idref" href="#m:23"><span class="id" title="binder">m</span></a> <a id="n:24" class="idref" href="#n:24"><span class="id" title="binder">n</span></a> : <a class="idref" href="index.html#list"><span class="id" title="inductive">list</span></a>), <br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="index.html#concat"><span class="id" title="definition">concat</span></a> (<a class="idref" href="index.html#concat"><span class="id" title="definition">concat</span></a> <a class="idref" href="index.html#l:22"><span class="id" title="variable">l</span></a> <a class="idref" href="index.html#m:23"><span class="id" title="variable">m</span></a>) <a class="idref" href="index.html#n:24"><span class="id" title="variable">n</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.16.1/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="index.html#concat"><span class="id" title="definition">concat</span></a> <a class="idref" href="index.html#l:22"><span class="id" title="variable">l</span></a> (<a class="idref" href="index.html#concat"><span class="id" title="definition">concat</span></a> <a class="idref" href="index.html#m:23"><span class="id" title="variable">m</span></a> <a class="idref" href="index.html#n:24"><span class="id" title="variable">n</span></a>)).<br/>
+</div>
+
+<div class="doc">
+We see a new type, <span class="inlinecode"><span class="id" title="keyword">Prop</span></span>. 
+The type <span class="inlinecode"><span class="id" title="keyword">Prop</span></span> is the type of (mathematical) statements.
+The question of truth (through providing a proof) is dealt with a posteriori. 
+
+<div class="paragraph"> </div>
+
+Let's say we have some <span class="inlinecode"><span class="id" title="var">P</span></span> of type <span class="inlinecode"><span class="id" title="keyword">Prop</span></span>.
+A proof <span class="inlinecode"><span class="id" title="var">pr</span></span> of <span class="inlinecode"><span class="id" title="var">P</span></span> is an inhabitant of <span class="inlinecode"><span class="id" title="var">P</span></span>.
+We have <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">Prop</span></span> and if one is able to provide some <span class="inlinecode"><span class="id" title="var">pr</span></span> such that <span class="inlinecode"><span class="id" title="var">pr</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">P</span></span>
+then <span class="inlinecode"><span class="id" title="var">pr</span></span> is a proof of <span class="inlinecode"><span class="id" title="var">P</span></span>.
+<div class="paragraph"> </div>
+
+ In the first proof script below, some tactics are introduced: 
+
+<div class="paragraph"> </div>
+
+<span class="inlinecode"><span class="id" title="tactic">elim</span>:</span> 
+
+<div class="paragraph"> </div>
+
+<span class="inlinecode"><span class="id" title="tactic">rewrite</span></span> <span class="inlinecode">/=</span> 
+
+<div class="paragraph"> </div>
+
+<span class="inlinecode"><span class="id" title="tactic">move</span>⇒</span> 
+
+<div class="paragraph"> </div>
+
+<span class="inlinecode"><span class="id" title="tactic">rewrite</span></span> 
+
+<div class="paragraph"> </div>
+
+<span class="inlinecode"><span class="id" title="tactic">by</span></span> <span class="inlinecode">[]</span> 
+</div>
+<div class="code">
+<span class="id" title="keyword">Lemma</span> <a id="associative_concat" class="idref" href="#associative_concat"><span class="id" title="lemma">associative_concat</span></a> : <span class="id" title="keyword">∀</span> (<a id="l:25" class="idref" href="#l:25"><span class="id" title="binder">l</span></a> <a id="m:26" class="idref" href="#m:26"><span class="id" title="binder">m</span></a> <a id="n:27" class="idref" href="#n:27"><span class="id" title="binder">n</span></a> : <a class="idref" href="index.html#list"><span class="id" title="inductive">list</span></a>),<br/>
+<a class="idref" href="index.html#concat"><span class="id" title="definition">concat</span></a> (<a class="idref" href="index.html#concat"><span class="id" title="definition">concat</span></a> <a class="idref" href="index.html#l:25"><span class="id" title="variable">l</span></a> <a class="idref" href="index.html#m:26"><span class="id" title="variable">m</span></a>) <a class="idref" href="index.html#n:27"><span class="id" title="variable">n</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.16.1/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="index.html#concat"><span class="id" title="definition">concat</span></a> <a class="idref" href="index.html#l:25"><span class="id" title="variable">l</span></a> (<a class="idref" href="index.html#concat"><span class="id" title="definition">concat</span></a> <a class="idref" href="index.html#m:26"><span class="id" title="variable">m</span></a> <a class="idref" href="index.html#n:27"><span class="id" title="variable">n</span></a>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+<span class="id" title="tactic">move</span>⇒ <span class="id" title="var">l</span>.<br/>
+<span class="id" title="tactic">move</span>⇒ <span class="id" title="var">m</span>.<br/>
+<span class="id" title="tactic">move</span>⇒ <span class="id" title="var">n</span>.<br/>
+<span class="id" title="tactic">elim</span>: <span class="id" title="var">l</span>.<br/>
++ <span class="id" title="tactic">rewrite</span> /=.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">by</span> [].<br/>
++ <span class="id" title="tactic">move</span>⇒ <span class="id" title="var">a</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">move</span>⇒ <span class="id" title="var">l'</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">move</span>⇒ <span class="id" title="var">IH</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> /=.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <span class="id" title="var">IH</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">by</span> [].<br/>
+<span class="id" title="keyword">Show</span> <span class="id" title="keyword">Proof</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+</div>
+
+<div class="doc">
+The <span class="inlinecode"><span class="id" title="keyword">Show</span></span> <span class="inlinecode"><span class="id" title="keyword">Proof</span></span> command displays the term currently being built.
+Just at the end of a successful proof (before an accepted <span class="inlinecode"><span class="id" title="keyword">Qed</span></span> command) it displays the whole term whose type is the statement. 
+Below we have just copied the result of the <span class="inlinecode"><span class="id" title="keyword">Show</span></span> <span class="inlinecode"><span class="id" title="keyword">Proof</span></span> command (some variables need to be renamed). 
+You can see that it is a well-formed object, whose type is exactly the statement we wanted to prove.
+In other words, the following chunck of code is a proof of the statement. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Check</span> ((<span class="id" title="keyword">fun</span> <a id="l:28" class="idref" href="#l:28"><span class="id" title="binder">l</span></a> <a id="m:29" class="idref" href="#m:29"><span class="id" title="binder">m</span></a> <a id="n:30" class="idref" href="#n:30"><span class="id" title="binder">n</span></a> : <a class="idref" href="index.html#list"><span class="id" title="inductive">list</span></a> ⇒<br/>
+&nbsp;&nbsp;(<span class="id" title="keyword">fun</span> (<a id="x:32" class="idref" href="#x:32"><span class="id" title="binder">x</span></a> : (<span class="id" title="keyword">fun</span> <a id="l0:31" class="idref" href="#l0:31"><span class="id" title="binder">l0</span></a> : <a class="idref" href="index.html#list"><span class="id" title="inductive">list</span></a> ⇒<br/>
+&nbsp;&nbsp;<a class="idref" href="index.html#concat"><span class="id" title="definition">concat</span></a> (<a class="idref" href="index.html#concat"><span class="id" title="definition">concat</span></a> <a class="idref" href="index.html#l0:31"><span class="id" title="variable">l0</span></a> <a class="idref" href="index.html#m:29"><span class="id" title="variable">m</span></a>) <a class="idref" href="index.html#n:30"><span class="id" title="variable">n</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.16.1/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a><br/>
+<a class="idref" href="index.html#concat"><span class="id" title="definition">concat</span></a> <a class="idref" href="index.html#l0:31"><span class="id" title="variable">l0</span></a> (<a class="idref" href="index.html#concat"><span class="id" title="definition">concat</span></a> <a class="idref" href="index.html#m:29"><span class="id" title="variable">m</span></a> <a class="idref" href="index.html#n:30"><span class="id" title="variable">n</span></a>))<br/>
+&nbsp;&nbsp;<a class="idref" href="index.html#empty"><span class="id" title="constructor">empty</span></a>) (<a id="y:37" class="idref" href="#y:37"><span class="id" title="binder">y</span></a> : <span class="id" title="keyword">∀</span> (<a id="a:33" class="idref" href="#a:33"><span class="id" title="binder">a</span></a> : <a class="idref" href="index.html#OurLists.A"><span class="id" title="variable">A</span></a>) (<a id="l0:34" class="idref" href="#l0:34"><span class="id" title="binder">l0</span></a> : <a class="idref" href="index.html#list"><span class="id" title="inductive">list</span></a>),<br/>
+&nbsp;&nbsp;(<span class="id" title="keyword">fun</span> <a id="l1:35" class="idref" href="#l1:35"><span class="id" title="binder">l1</span></a> : <a class="idref" href="index.html#list"><span class="id" title="inductive">list</span></a> ⇒<br/>
+&nbsp;&nbsp;<a class="idref" href="index.html#concat"><span class="id" title="definition">concat</span></a><br/>
+&nbsp;&nbsp;(<a class="idref" href="index.html#concat"><span class="id" title="definition">concat</span></a><br/>
+&nbsp;&nbsp;<a class="idref" href="index.html#l1:35"><span class="id" title="variable">l1</span></a> <a class="idref" href="index.html#m:29"><span class="id" title="variable">m</span></a>)<br/>
+&nbsp;&nbsp;<a class="idref" href="index.html#n:30"><span class="id" title="variable">n</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.16.1/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a><br/>
+<a class="idref" href="index.html#concat"><span class="id" title="definition">concat</span></a> <a class="idref" href="index.html#l1:35"><span class="id" title="variable">l1</span></a><br/>
+&nbsp;&nbsp;(<a class="idref" href="index.html#concat"><span class="id" title="definition">concat</span></a><br/>
+&nbsp;&nbsp;<a class="idref" href="index.html#m:29"><span class="id" title="variable">m</span></a> <a class="idref" href="index.html#n:30"><span class="id" title="variable">n</span></a>))<br/>
+&nbsp;&nbsp;<a class="idref" href="index.html#l0:34"><span class="id" title="variable">l0</span></a><br/>
+<a class="idref" href="http://coq.inria.fr/distrib/V8.16.1/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> (<span class="id" title="keyword">fun</span> <a id="l1:36" class="idref" href="#l1:36"><span class="id" title="binder">l1</span></a> : <a class="idref" href="index.html#list"><span class="id" title="inductive">list</span></a> ⇒<br/>
+&nbsp;&nbsp;<a class="idref" href="index.html#concat"><span class="id" title="definition">concat</span></a><br/>
+&nbsp;&nbsp;(<a class="idref" href="index.html#concat"><span class="id" title="definition">concat</span></a><br/>
+&nbsp;&nbsp;<a class="idref" href="index.html#l1:36"><span class="id" title="variable">l1</span></a><br/>
+&nbsp;&nbsp;<a class="idref" href="index.html#m:29"><span class="id" title="variable">m</span></a>)<br/>
+&nbsp;&nbsp;<a class="idref" href="index.html#n:30"><span class="id" title="variable">n</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.16.1/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a><br/>
+<a class="idref" href="index.html#concat"><span class="id" title="definition">concat</span></a><br/>
+&nbsp;&nbsp;<a class="idref" href="index.html#l1:36"><span class="id" title="variable">l1</span></a><br/>
+&nbsp;&nbsp;(<a class="idref" href="index.html#concat"><span class="id" title="definition">concat</span></a><br/>
+&nbsp;&nbsp;<a class="idref" href="index.html#m:29"><span class="id" title="variable">m</span></a><br/>
+&nbsp;&nbsp;<a class="idref" href="index.html#n:30"><span class="id" title="variable">n</span></a>))<br/>
+&nbsp;&nbsp;(<a class="idref" href="index.html#add"><span class="id" title="constructor">add</span></a> <a class="idref" href="index.html#a:33"><span class="id" title="variable">a</span></a> <a class="idref" href="index.html#l0:34"><span class="id" title="variable">l0</span></a>)) ⇒<br/>
+&nbsp;&nbsp;<a class="idref" href="index.html#list_ind"><span class="id" title="definition">list_ind</span></a><br/>
+&nbsp;&nbsp;(<span class="id" title="keyword">fun</span> <a id="l0:38" class="idref" href="#l0:38"><span class="id" title="binder">l0</span></a> : <a class="idref" href="index.html#list"><span class="id" title="inductive">list</span></a> ⇒<br/>
+&nbsp;&nbsp;<a class="idref" href="index.html#concat"><span class="id" title="definition">concat</span></a> (<a class="idref" href="index.html#concat"><span class="id" title="definition">concat</span></a> <a class="idref" href="index.html#l0:38"><span class="id" title="variable">l0</span></a> <a class="idref" href="index.html#m:29"><span class="id" title="variable">m</span></a>) <a class="idref" href="index.html#n:30"><span class="id" title="variable">n</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.16.1/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a><br/>
+<a class="idref" href="index.html#concat"><span class="id" title="definition">concat</span></a> <a class="idref" href="index.html#l0:38"><span class="id" title="variable">l0</span></a> (<a class="idref" href="index.html#concat"><span class="id" title="definition">concat</span></a> <a class="idref" href="index.html#m:29"><span class="id" title="variable">m</span></a> <a class="idref" href="index.html#n:30"><span class="id" title="variable">n</span></a>))<br/>
+&nbsp;&nbsp;<a class="idref" href="index.html#x:32"><span class="id" title="variable">x</span></a> <a class="idref" href="index.html#y:37"><span class="id" title="variable">y</span></a><br/>
+&nbsp;&nbsp;<a class="idref" href="index.html#l:28"><span class="id" title="variable">l</span></a>)<br/>
+&nbsp;&nbsp;<a class="idref" href="http://coq.inria.fr/distrib/V8.16.1/stdlib//Coq.Init.Logic.html#eq_refl"><span class="id" title="constructor">eq_refl</span></a><br/>
+&nbsp;&nbsp;(<span class="id" title="keyword">fun</span> (<a id="a:39" class="idref" href="#a:39"><span class="id" title="binder">a</span></a> : <a class="idref" href="index.html#OurLists.A"><span class="id" title="variable">A</span></a>) (<a id="l':40" class="idref" href="#l':40"><span class="id" title="binder">l'</span></a> : <a class="idref" href="index.html#list"><span class="id" title="inductive">list</span></a>) (<a id="IH:41" class="idref" href="#IH:41"><span class="id" title="binder">IH</span></a> : <a class="idref" href="index.html#concat"><span class="id" title="definition">concat</span></a> (<a class="idref" href="index.html#concat"><span class="id" title="definition">concat</span></a> <a class="idref" href="index.html#l':40"><span class="id" title="variable">l'</span></a> <a class="idref" href="index.html#m:29"><span class="id" title="variable">m</span></a>)<br/>
+&nbsp;&nbsp;<a class="idref" href="index.html#n:30"><span class="id" title="variable">n</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.16.1/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a><br/>
+<a class="idref" href="index.html#concat"><span class="id" title="definition">concat</span></a> <a class="idref" href="index.html#l':40"><span class="id" title="variable">l'</span></a><br/>
+&nbsp;&nbsp;(<a class="idref" href="index.html#concat"><span class="id" title="definition">concat</span></a> <a class="idref" href="index.html#m:29"><span class="id" title="variable">m</span></a> <a class="idref" href="index.html#n:30"><span class="id" title="variable">n</span></a>)) ⇒<br/>
+&nbsp;&nbsp;(<span class="id" title="keyword">fun</span> <a id="x:42" class="idref" href="#x:42"><span class="id" title="binder">x</span></a> : <a class="idref" href="index.html#add"><span class="id" title="constructor">add</span></a> <a class="idref" href="index.html#a:39"><span class="id" title="variable">a</span></a> (<a class="idref" href="index.html#concat"><span class="id" title="definition">concat</span></a> <a class="idref" href="index.html#l':40"><span class="id" title="variable">l'</span></a> (<a class="idref" href="index.html#concat"><span class="id" title="definition">concat</span></a> <a class="idref" href="index.html#m:29"><span class="id" title="variable">m</span></a> <a class="idref" href="index.html#n:30"><span class="id" title="variable">n</span></a>)) <a class="idref" href="http://coq.inria.fr/distrib/V8.16.1/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a><br/>
+<a class="idref" href="index.html#add"><span class="id" title="constructor">add</span></a> <a class="idref" href="index.html#a:39"><span class="id" title="variable">a</span></a> (<a class="idref" href="index.html#concat"><span class="id" title="definition">concat</span></a> <a class="idref" href="index.html#l':40"><span class="id" title="variable">l'</span></a> (<a class="idref" href="index.html#concat"><span class="id" title="definition">concat</span></a> <a class="idref" href="index.html#m:29"><span class="id" title="variable">m</span></a> <a class="idref" href="index.html#n:30"><span class="id" title="variable">n</span></a>)) ⇒<br/>
+&nbsp;&nbsp;<a class="idref" href="http://coq.inria.fr/distrib/V8.16.1/stdlib//Coq.Init.Logic.html#eq_ind_r"><span class="id" title="definition">eq_ind_r</span></a><br/>
+&nbsp;&nbsp;(<span class="id" title="keyword">fun</span> <a id="z:43" class="idref" href="#z:43"><span class="id" title="binder">z</span></a> : <a class="idref" href="index.html#list"><span class="id" title="inductive">list</span></a> ⇒<br/>
+&nbsp;&nbsp;<a class="idref" href="index.html#add"><span class="id" title="constructor">add</span></a> <a class="idref" href="index.html#a:39"><span class="id" title="variable">a</span></a> <a class="idref" href="index.html#z:43"><span class="id" title="variable">z</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.16.1/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a><br/>
+<a class="idref" href="index.html#add"><span class="id" title="constructor">add</span></a> <a class="idref" href="index.html#a:39"><span class="id" title="variable">a</span></a> (<a class="idref" href="index.html#concat"><span class="id" title="definition">concat</span></a> <a class="idref" href="index.html#l':40"><span class="id" title="variable">l'</span></a> (<a class="idref" href="index.html#concat"><span class="id" title="definition">concat</span></a> <a class="idref" href="index.html#m:29"><span class="id" title="variable">m</span></a> <a class="idref" href="index.html#n:30"><span class="id" title="variable">n</span></a>)))<br/>
+&nbsp;&nbsp;<a class="idref" href="index.html#x:42"><span class="id" title="variable">x</span></a><br/>
+&nbsp;&nbsp;<a class="idref" href="index.html#IH:41"><span class="id" title="variable">IH</span></a>)<br/>
+&nbsp;&nbsp;<a class="idref" href="http://coq.inria.fr/distrib/V8.16.1/stdlib//Coq.Init.Logic.html#eq_refl"><span class="id" title="constructor">eq_refl</span></a>))).<br/>
+</div>
+
+<div class="doc">
+It is convenient not to have to provide this chunck of code by oneself in order to prove the statement.
+Instead, we use the tactics language between the keywords <span class="inlinecode"><span class="id" title="keyword">Proof</span></span> and <span class="inlinecode"><span class="id" title="keyword">Qed</span></span> in a similar same way
+we do reasoning steps in a pen-and-paper mathematical proof. This feature can be seen as a kind of assistance from the system to let one guide it through writing a proof-term.
+
+<div class="paragraph"> </div>
+
+A tool that provides only the check of formal proofs is called proof checker.
+Tools such as Coq which provide more features around the proof-checker are called proof assistants. 
+The automation features are not addressed in this tutorial.
+Getting higher level of confidence in the statements of the checked proofs requires higher level of confidence in the type-checker (.i.e. it does not contain bug). 
+<div class="paragraph"> </div>
+
+ The following piece of code just shows an alternate way to express the lemma <span class="inlinecode"><span class="id" title="var">associative_concat</span></span>. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Lemma</span> <a id="associative_concat'" class="idref" href="#associative_concat'"><span class="id" title="lemma">associative_concat'</span></a> (<a id="l:44" class="idref" href="#l:44"><span class="id" title="binder">l</span></a> <a id="m:45" class="idref" href="#m:45"><span class="id" title="binder">m</span></a> <a id="n:46" class="idref" href="#n:46"><span class="id" title="binder">n</span></a> : <a class="idref" href="index.html#list"><span class="id" title="inductive">list</span></a>) :<br/>
+<a class="idref" href="index.html#concat"><span class="id" title="definition">concat</span></a> (<a class="idref" href="index.html#concat"><span class="id" title="definition">concat</span></a> <a class="idref" href="index.html#l:44"><span class="id" title="variable">l</span></a> <a class="idref" href="index.html#m:45"><span class="id" title="variable">m</span></a>) <a class="idref" href="index.html#n:46"><span class="id" title="variable">n</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.16.1/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="index.html#concat"><span class="id" title="definition">concat</span></a> <a class="idref" href="index.html#l:44"><span class="id" title="variable">l</span></a> (<a class="idref" href="index.html#concat"><span class="id" title="definition">concat</span></a> <a class="idref" href="index.html#m:45"><span class="id" title="variable">m</span></a> <a class="idref" href="index.html#n:46"><span class="id" title="variable">n</span></a>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+<span class="id" title="tactic">elim</span>: <span class="id" title="var">l</span>.<br/>
++ <span class="id" title="tactic">rewrite</span> /=.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">by</span> [].<br/>
++ <span class="id" title="tactic">move</span>⇒ <span class="id" title="var">a</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">move</span>⇒ <span class="id" title="var">l'</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">move</span>⇒ <span class="id" title="var">IH</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> /=.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <span class="id" title="var">IH</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">by</span> [].<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+In the following proof, a new tactic <span class="inlinecode"><span class="id" title="tactic">case</span>:</span> is introduced. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Lemma</span> <a id="concat_empty_left" class="idref" href="#concat_empty_left"><span class="id" title="lemma">concat_empty_left</span></a> (<a id="l:47" class="idref" href="#l:47"><span class="id" title="binder">l</span></a> <a id="m:48" class="idref" href="#m:48"><span class="id" title="binder">m</span></a> : <a class="idref" href="index.html#list"><span class="id" title="inductive">list</span></a>) :<br/>
+<a class="idref" href="index.html#concat"><span class="id" title="definition">concat</span></a> <a class="idref" href="index.html#l:47"><span class="id" title="variable">l</span></a> <a class="idref" href="index.html#m:48"><span class="id" title="variable">m</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.16.1/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="index.html#empty"><span class="id" title="constructor">empty</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.16.1/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="index.html#l:47"><span class="id" title="variable">l</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.16.1/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="index.html#empty"><span class="id" title="constructor">empty</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+<span class="id" title="tactic">case</span>: <span class="id" title="var">l</span>.<br/>
++ <span class="id" title="tactic">move</span>⇒ <span class="id" title="var">_</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">by</span> [].<br/>
++ <span class="id" title="tactic">move</span>⇒ <span class="id" title="var">a</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">move</span>⇒ <span class="id" title="var">l'</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> /=.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">by</span> [].<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Section</span> <a id="OurLists.TestPartialApplications" class="idref" href="#OurLists.TestPartialApplications"><span class="id" title="section">TestPartialApplications</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Variables</span> (<a id="OurLists.TestPartialApplications.a" class="idref" href="#OurLists.TestPartialApplications.a"><span class="id" title="variable">a</span></a> <a id="OurLists.TestPartialApplications.b" class="idref" href="#OurLists.TestPartialApplications.b"><span class="id" title="variable">b</span></a> : <a class="idref" href="index.html#list"><span class="id" title="inductive">list</span></a>).<br/>
+
+<br/>
+<span class="id" title="keyword">Check</span> <a class="idref" href="index.html#concat_empty_left"><span class="id" title="lemma">concat_empty_left</span></a>.<br/>
+<span class="id" title="keyword">Check</span> <a class="idref" href="index.html#concat_empty_left"><span class="id" title="lemma">concat_empty_left</span></a> <a class="idref" href="index.html#OurLists.TestPartialApplications.a"><span class="id" title="variable">a</span></a>.<br/>
+<span class="id" title="keyword">Check</span> <a class="idref" href="index.html#concat_empty_left"><span class="id" title="lemma">concat_empty_left</span></a> <a class="idref" href="index.html#OurLists.TestPartialApplications.b"><span class="id" title="variable">b</span></a>.<br/>
+<span class="id" title="keyword">Check</span> <a class="idref" href="index.html#concat_empty_left"><span class="id" title="lemma">concat_empty_left</span></a> <a class="idref" href="index.html#OurLists.TestPartialApplications.a"><span class="id" title="variable">a</span></a> <a class="idref" href="index.html#OurLists.TestPartialApplications.b"><span class="id" title="variable">b</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="index.html#OurLists.TestPartialApplications"><span class="id" title="section">TestPartialApplications</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+In the following proof, a new tactic <span class="inlinecode"><span class="id" title="tactic">apply</span>:</span> is introduced. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Lemma</span> <a id="concat_empty_right" class="idref" href="#concat_empty_right"><span class="id" title="lemma">concat_empty_right</span></a> (<a id="l:51" class="idref" href="#l:51"><span class="id" title="binder">l</span></a> <a id="m:52" class="idref" href="#m:52"><span class="id" title="binder">m</span></a> : <a class="idref" href="index.html#list"><span class="id" title="inductive">list</span></a>) :<br/>
+<a class="idref" href="index.html#concat"><span class="id" title="definition">concat</span></a> <a class="idref" href="index.html#l:51"><span class="id" title="variable">l</span></a> <a class="idref" href="index.html#m:52"><span class="id" title="variable">m</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.16.1/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="index.html#empty"><span class="id" title="constructor">empty</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.16.1/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="index.html#m:52"><span class="id" title="variable">m</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.16.1/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="index.html#empty"><span class="id" title="constructor">empty</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+<span class="id" title="tactic">move</span>⇒ <span class="id" title="var">H</span>.<br/>
+<span class="id" title="var">have</span> <span class="id" title="var">l_empty</span> : <span class="id" title="var">l</span> <a class="idref" href="http://coq.inria.fr/distrib/V8.16.1/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="index.html#empty"><span class="id" title="constructor">empty</span></a>.<br/>
++ <span class="id" title="tactic">apply</span>: (<a class="idref" href="index.html#concat_empty_left"><span class="id" title="lemma">concat_empty_left</span></a> <span class="id" title="var">l</span> <span class="id" title="var">m</span>).<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span>: <span class="id" title="var">H</span>.<br/>
++ <span class="id" title="tactic">move</span>: <span class="id" title="var">H</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <span class="id" title="var">l_empty</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> /=.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">by</span> [].<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <a id="append" class="idref" href="#append"><span class="id" title="definition">append</span></a> (<a id="a:53" class="idref" href="#a:53"><span class="id" title="binder">a</span></a> : <a class="idref" href="index.html#OurLists.A"><span class="id" title="variable">A</span></a>) (<a id="l:54" class="idref" href="#l:54"><span class="id" title="binder">l</span></a> : <a class="idref" href="index.html#list"><span class="id" title="inductive">list</span></a>) : <a class="idref" href="index.html#list"><span class="id" title="inductive">list</span></a> :=<br/>
+<span class="id" title="keyword">match</span> <a class="idref" href="index.html#l:54"><span class="id" title="variable">l</span></a> <span class="id" title="keyword">with</span><br/>
+| <a class="idref" href="index.html#empty"><span class="id" title="constructor">empty</span></a> ⇒ <a class="idref" href="index.html#add"><span class="id" title="constructor">add</span></a> <a class="idref" href="index.html#a:53"><span class="id" title="variable">a</span></a> <a class="idref" href="index.html#empty"><span class="id" title="constructor">empty</span></a><br/>
+| <a class="idref" href="index.html#add"><span class="id" title="constructor">add</span></a> <span class="id" title="var">b</span> <span class="id" title="var">l'</span> ⇒ <a class="idref" href="index.html#add"><span class="id" title="constructor">add</span></a> <span class="id" title="var">b</span> (<a class="idref" href="index.html#append:55"><span class="id" title="definition">append</span></a> <a class="idref" href="index.html#a:53"><span class="id" title="variable">a</span></a> <span class="id" title="var">l'</span>) <br/>
+<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="concat_append" class="idref" href="#concat_append"><span class="id" title="lemma">concat_append</span></a> (<a id="a:57" class="idref" href="#a:57"><span class="id" title="binder">a</span></a> : <a class="idref" href="index.html#OurLists.A"><span class="id" title="variable">A</span></a>) (<a id="l:58" class="idref" href="#l:58"><span class="id" title="binder">l</span></a> <a id="m:59" class="idref" href="#m:59"><span class="id" title="binder">m</span></a> : <a class="idref" href="index.html#list"><span class="id" title="inductive">list</span></a>) : <br/>
+<a class="idref" href="index.html#append"><span class="id" title="definition">append</span></a> <a class="idref" href="index.html#a:57"><span class="id" title="variable">a</span></a> (<a class="idref" href="index.html#concat"><span class="id" title="definition">concat</span></a> <a class="idref" href="index.html#l:58"><span class="id" title="variable">l</span></a> <a class="idref" href="index.html#m:59"><span class="id" title="variable">m</span></a>) <a class="idref" href="http://coq.inria.fr/distrib/V8.16.1/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="index.html#concat"><span class="id" title="definition">concat</span></a> <a class="idref" href="index.html#l:58"><span class="id" title="variable">l</span></a> (<a class="idref" href="index.html#append"><span class="id" title="definition">append</span></a> <a class="idref" href="index.html#a:57"><span class="id" title="variable">a</span></a> <a class="idref" href="index.html#m:59"><span class="id" title="variable">m</span></a>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+<span class="id" title="tactic">elim</span>: <span class="id" title="var">l</span>.<br/>
++ <span class="id" title="tactic">rewrite</span> /=.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">by</span> [].<br/>
++ <span class="id" title="tactic">move</span>⇒ <span class="id" title="var">b</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">move</span>⇒ <span class="id" title="var">l'</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">move</span>⇒ <span class="id" title="var">IH</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> /=.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <span class="id" title="var">IH</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">by</span> [].<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <a id="reverse" class="idref" href="#reverse"><span class="id" title="definition">reverse</span></a> (<a id="l:60" class="idref" href="#l:60"><span class="id" title="binder">l</span></a> : <a class="idref" href="index.html#list"><span class="id" title="inductive">list</span></a>) : <a class="idref" href="index.html#list"><span class="id" title="inductive">list</span></a> :=<br/>
+<span class="id" title="keyword">match</span> <a class="idref" href="index.html#l:60"><span class="id" title="variable">l</span></a> <span class="id" title="keyword">with</span><br/>
+| <a class="idref" href="index.html#empty"><span class="id" title="constructor">empty</span></a> ⇒ <a class="idref" href="index.html#empty"><span class="id" title="constructor">empty</span></a><br/>
+| <a class="idref" href="index.html#add"><span class="id" title="constructor">add</span></a> <span class="id" title="var">a</span> <span class="id" title="var">l'</span> ⇒ <a class="idref" href="index.html#append"><span class="id" title="definition">append</span></a> <span class="id" title="var">a</span> (<a class="idref" href="index.html#reverse:61"><span class="id" title="definition">reverse</span></a> <span class="id" title="var">l'</span>)<br/>
+<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="reverse_reverse" class="idref" href="#reverse_reverse"><span class="id" title="lemma">reverse_reverse</span></a> (<a id="l:63" class="idref" href="#l:63"><span class="id" title="binder">l</span></a> : <a class="idref" href="index.html#list"><span class="id" title="inductive">list</span></a>) :<br/>
+&nbsp;&nbsp;<a class="idref" href="index.html#reverse"><span class="id" title="definition">reverse</span></a> (<a class="idref" href="index.html#reverse"><span class="id" title="definition">reverse</span></a> <a class="idref" href="index.html#l:63"><span class="id" title="variable">l</span></a>) <a class="idref" href="http://coq.inria.fr/distrib/V8.16.1/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="index.html#l:63"><span class="id" title="variable">l</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+<span class="id" title="tactic">elim</span>: <span class="id" title="var">l</span>.<br/>
++ <span class="id" title="tactic">rewrite</span> /=.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">by</span> [].<br/>
++ <span class="id" title="tactic">move</span>⇒ <span class="id" title="var">a</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">move</span>⇒ <span class="id" title="var">l'</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">move</span>⇒ <span class="id" title="var">IH</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> /=.<br/>
+&nbsp;&nbsp;<span class="id" title="var">have</span> <span class="id" title="var">H</span> : <span class="id" title="keyword">∀</span> (<a id="m:64" class="idref" href="#m:64"><span class="id" title="binder">m</span></a> : <a class="idref" href="index.html#list"><span class="id" title="inductive">list</span></a>), <br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="index.html#reverse"><span class="id" title="definition">reverse</span></a> (<a class="idref" href="index.html#append"><span class="id" title="definition">append</span></a> <span class="id" title="var">a</span> <a class="idref" href="index.html#m:64"><span class="id" title="variable">m</span></a>) <a class="idref" href="http://coq.inria.fr/distrib/V8.16.1/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="index.html#add"><span class="id" title="constructor">add</span></a> <span class="id" title="var">a</span> (<a class="idref" href="index.html#reverse"><span class="id" title="definition">reverse</span></a> <a class="idref" href="index.html#m:64"><span class="id" title="variable">m</span></a>).<br/>
+&nbsp;&nbsp;- <span class="id" title="var">admit</span>.<br/>
+&nbsp;&nbsp;- <span class="id" title="keyword">Check</span> (<span class="id" title="var">H</span> (<a class="idref" href="index.html#reverse"><span class="id" title="definition">reverse</span></a> <span class="id" title="var">l'</span>)).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> (<span class="id" title="var">H</span> (<a class="idref" href="index.html#reverse"><span class="id" title="definition">reverse</span></a> <span class="id" title="var">l'</span>)). &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <span class="id" title="var">IH</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">by</span> [].<br/>
+<span class="id" title="keyword">Abort</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="reverse_append" class="idref" href="#reverse_append"><span class="id" title="lemma">reverse_append</span></a> (<a id="a:65" class="idref" href="#a:65"><span class="id" title="binder">a</span></a> : <a class="idref" href="index.html#OurLists.A"><span class="id" title="variable">A</span></a>) (<a id="m:66" class="idref" href="#m:66"><span class="id" title="binder">m</span></a> : <a class="idref" href="index.html#list"><span class="id" title="inductive">list</span></a>) : <br/>
+&nbsp;&nbsp;<a class="idref" href="index.html#reverse"><span class="id" title="definition">reverse</span></a> (<a class="idref" href="index.html#append"><span class="id" title="definition">append</span></a> <a class="idref" href="index.html#a:65"><span class="id" title="variable">a</span></a> <a class="idref" href="index.html#m:66"><span class="id" title="variable">m</span></a>) <a class="idref" href="http://coq.inria.fr/distrib/V8.16.1/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="index.html#add"><span class="id" title="constructor">add</span></a> <a class="idref" href="index.html#a:65"><span class="id" title="variable">a</span></a> (<a class="idref" href="index.html#reverse"><span class="id" title="definition">reverse</span></a> <a class="idref" href="index.html#m:66"><span class="id" title="variable">m</span></a>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+<span class="id" title="tactic">elim</span>: <span class="id" title="var">m</span>.<br/>
++ <span class="id" title="tactic">rewrite</span> /=.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">by</span> [].<br/>
++ <span class="id" title="tactic">move</span>⇒ <span class="id" title="var">b</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">move</span>⇒ <span class="id" title="var">n</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">move</span>⇒ <span class="id" title="var">IH</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> /=.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <span class="id" title="var">IH</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">by</span> [].<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="reverse_reverse" class="idref" href="#reverse_reverse"><span class="id" title="lemma">reverse_reverse</span></a> (<a id="l:67" class="idref" href="#l:67"><span class="id" title="binder">l</span></a> : <a class="idref" href="index.html#list"><span class="id" title="inductive">list</span></a>) :<br/>
+&nbsp;&nbsp;<a class="idref" href="index.html#reverse"><span class="id" title="definition">reverse</span></a> (<a class="idref" href="index.html#reverse"><span class="id" title="definition">reverse</span></a> <a class="idref" href="index.html#l:67"><span class="id" title="variable">l</span></a>) <a class="idref" href="http://coq.inria.fr/distrib/V8.16.1/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="index.html#l:67"><span class="id" title="variable">l</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+<span class="id" title="tactic">elim</span>: <span class="id" title="var">l</span>.<br/>
++ <span class="id" title="tactic">rewrite</span> /=.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">by</span> [].<br/>
++ <span class="id" title="tactic">move</span>⇒ <span class="id" title="var">a</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">move</span>⇒ <span class="id" title="var">l'</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">move</span>⇒ <span class="id" title="var">IH</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> /=.<br/>
+&nbsp;&nbsp;- <span class="id" title="keyword">Check</span> (<a class="idref" href="index.html#reverse_append"><span class="id" title="lemma">reverse_append</span></a> <span class="id" title="var">a</span> (<a class="idref" href="index.html#reverse"><span class="id" title="definition">reverse</span></a> <span class="id" title="var">l'</span>)).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> (<a class="idref" href="index.html#reverse_append"><span class="id" title="lemma">reverse_append</span></a> <span class="id" title="var">a</span> (<a class="idref" href="index.html#reverse"><span class="id" title="definition">reverse</span></a> <span class="id" title="var">l'</span>)).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <span class="id" title="var">IH</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">by</span> [].<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="reverse_concat" class="idref" href="#reverse_concat"><span class="id" title="lemma">reverse_concat</span></a> (<a id="l:68" class="idref" href="#l:68"><span class="id" title="binder">l</span></a> <a id="m:69" class="idref" href="#m:69"><span class="id" title="binder">m</span></a> : <a class="idref" href="index.html#list"><span class="id" title="inductive">list</span></a>) :<br/>
+<a class="idref" href="index.html#reverse"><span class="id" title="definition">reverse</span></a> (<a class="idref" href="index.html#concat"><span class="id" title="definition">concat</span></a> <a class="idref" href="index.html#l:68"><span class="id" title="variable">l</span></a> <a class="idref" href="index.html#m:69"><span class="id" title="variable">m</span></a>) <a class="idref" href="http://coq.inria.fr/distrib/V8.16.1/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="index.html#concat"><span class="id" title="definition">concat</span></a> (<a class="idref" href="index.html#reverse"><span class="id" title="definition">reverse</span></a> <a class="idref" href="index.html#m:69"><span class="id" title="variable">m</span></a>) (<a class="idref" href="index.html#reverse"><span class="id" title="definition">reverse</span></a> <a class="idref" href="index.html#l:68"><span class="id" title="variable">l</span></a>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+<span class="id" title="tactic">elim</span>: <span class="id" title="var">l</span>.<br/>
++ <span class="id" title="tactic">rewrite</span> /=.<br/>
+<span class="id" title="keyword">Abort</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="concat_l_empty" class="idref" href="#concat_l_empty"><span class="id" title="lemma">concat_l_empty</span></a> (<a id="l:70" class="idref" href="#l:70"><span class="id" title="binder">l</span></a> : <a class="idref" href="index.html#list"><span class="id" title="inductive">list</span></a>) :<br/>
+<a class="idref" href="index.html#concat"><span class="id" title="definition">concat</span></a> <a class="idref" href="index.html#l:70"><span class="id" title="variable">l</span></a> <a class="idref" href="index.html#empty"><span class="id" title="constructor">empty</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.16.1/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="index.html#l:70"><span class="id" title="variable">l</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+<span class="id" title="tactic">elim</span>: <span class="id" title="var">l</span>.<br/>
++ <span class="id" title="tactic">rewrite</span> /=.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">by</span> [].<br/>
++ <span class="id" title="tactic">move</span>⇒ <span class="id" title="var">a</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">move</span>⇒ <span class="id" title="var">m</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">move</span>⇒ <span class="id" title="var">IH</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> /=.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <span class="id" title="var">IH</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">by</span> [].<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="reverse_concat" class="idref" href="#reverse_concat"><span class="id" title="lemma">reverse_concat</span></a> (<a id="l:71" class="idref" href="#l:71"><span class="id" title="binder">l</span></a> <a id="m:72" class="idref" href="#m:72"><span class="id" title="binder">m</span></a> : <a class="idref" href="index.html#list"><span class="id" title="inductive">list</span></a>) :<br/>
+<a class="idref" href="index.html#reverse"><span class="id" title="definition">reverse</span></a> (<a class="idref" href="index.html#concat"><span class="id" title="definition">concat</span></a> <a class="idref" href="index.html#l:71"><span class="id" title="variable">l</span></a> <a class="idref" href="index.html#m:72"><span class="id" title="variable">m</span></a>) <a class="idref" href="http://coq.inria.fr/distrib/V8.16.1/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="index.html#concat"><span class="id" title="definition">concat</span></a> (<a class="idref" href="index.html#reverse"><span class="id" title="definition">reverse</span></a> <a class="idref" href="index.html#m:72"><span class="id" title="variable">m</span></a>) (<a class="idref" href="index.html#reverse"><span class="id" title="definition">reverse</span></a> <a class="idref" href="index.html#l:71"><span class="id" title="variable">l</span></a>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+<span class="id" title="tactic">elim</span>: <span class="id" title="var">l</span>.<br/>
++ <span class="id" title="tactic">rewrite</span> /=.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <a class="idref" href="index.html#concat_l_empty"><span class="id" title="lemma">concat_l_empty</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">by</span> [].<br/>
++ <span class="id" title="tactic">move</span>⇒ <span class="id" title="var">a</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">move</span>⇒ <span class="id" title="var">l</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">move</span>⇒ <span class="id" title="var">IH</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> /=.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <span class="id" title="var">IH</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <a class="idref" href="index.html#concat_append"><span class="id" title="lemma">concat_append</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">by</span> [].<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="index.html#OurLists"><span class="id" title="section">OurLists</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Section</span> <a id="MapList" class="idref" href="#MapList"><span class="id" title="section">MapList</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Check</span> <a class="idref" href="index.html#list"><span class="id" title="inductive">list</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Variables</span> (<a id="MapList.A" class="idref" href="#MapList.A"><span class="id" title="variable">A</span></a> <a id="MapList.B" class="idref" href="#MapList.B"><span class="id" title="variable">B</span></a> : <span class="id" title="keyword">Type</span>).<br/>
+<span class="id" title="keyword">Variable</span> (<a id="MapList.f" class="idref" href="#MapList.f"><span class="id" title="variable">f</span></a> : <a class="idref" href="index.html#MapList.A"><span class="id" title="variable">A</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.16.1/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="index.html#MapList.B"><span class="id" title="variable">B</span></a>).<br/>
+
+<br/>
+<span class="id" title="keyword">Check</span> <a class="idref" href="index.html#list"><span class="id" title="inductive">list</span></a> <a class="idref" href="index.html#MapList.A"><span class="id" title="variable">A</span></a>.<br/>
+<span class="id" title="keyword">Check</span> <a class="idref" href="index.html#list"><span class="id" title="inductive">list</span></a> <a class="idref" href="index.html#MapList.B"><span class="id" title="variable">B</span></a>.<br/>
+<span class="id" title="keyword">Check</span> <a class="idref" href="index.html#empty"><span class="id" title="constructor">empty</span></a>.<br/>
+<span class="id" title="keyword">Check</span> <a class="idref" href="index.html#empty"><span class="id" title="constructor">empty</span></a> <a class="idref" href="index.html#MapList.A"><span class="id" title="variable">A</span></a>.<br/>
+<span class="id" title="keyword">Check</span> <a class="idref" href="index.html#empty"><span class="id" title="constructor">empty</span></a> <a class="idref" href="index.html#MapList.B"><span class="id" title="variable">B</span></a>.<br/>
+<span class="id" title="keyword">Check</span> <a class="idref" href="index.html#add"><span class="id" title="constructor">add</span></a>.<br/>
+<span class="id" title="keyword">Check</span> <a class="idref" href="index.html#add"><span class="id" title="constructor">add</span></a> <a class="idref" href="index.html#MapList.A"><span class="id" title="variable">A</span></a>.<br/>
+<span class="id" title="keyword">Check</span> <a class="idref" href="index.html#add"><span class="id" title="constructor">add</span></a> <a class="idref" href="index.html#MapList.B"><span class="id" title="variable">B</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <a id="map" class="idref" href="#map"><span class="id" title="definition">map</span></a> (<a id="l:76" class="idref" href="#l:76"><span class="id" title="binder">l</span></a> : <a class="idref" href="index.html#list"><span class="id" title="inductive">list</span></a> <a class="idref" href="index.html#MapList.A"><span class="id" title="variable">A</span></a>) : <a class="idref" href="index.html#list"><span class="id" title="inductive">list</span></a> <a class="idref" href="index.html#MapList.B"><span class="id" title="variable">B</span></a> :=<br/>
+<span class="id" title="keyword">match</span> <a class="idref" href="index.html#l:76"><span class="id" title="variable">l</span></a> <span class="id" title="keyword">with</span><br/>
+| <a class="idref" href="index.html#empty"><span class="id" title="constructor">empty</span></a> <span class="id" title="var">_</span> ⇒ <a class="idref" href="index.html#empty"><span class="id" title="constructor">empty</span></a> <a class="idref" href="index.html#MapList.B"><span class="id" title="variable">B</span></a><br/>
+| <a class="idref" href="index.html#add"><span class="id" title="constructor">add</span></a> <span class="id" title="var">_</span> <span class="id" title="var">a</span> <span class="id" title="var">l'</span> ⇒ <a class="idref" href="index.html#add"><span class="id" title="constructor">add</span></a> <span class="id" title="var">_</span> (<a class="idref" href="index.html#MapList.f"><span class="id" title="variable">f</span></a> <span class="id" title="var">a</span>) (<a class="idref" href="index.html#map:77"><span class="id" title="definition">map</span></a> <span class="id" title="var">l'</span>)<br/>
+<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="map_concat" class="idref" href="#map_concat"><span class="id" title="lemma">map_concat</span></a> (<a id="l:79" class="idref" href="#l:79"><span class="id" title="binder">l</span></a> <a id="m:80" class="idref" href="#m:80"><span class="id" title="binder">m</span></a> : <a class="idref" href="index.html#list"><span class="id" title="inductive">list</span></a> <a class="idref" href="index.html#MapList.A"><span class="id" title="variable">A</span></a>) : <br/>
+&nbsp;&nbsp;<a class="idref" href="index.html#map"><span class="id" title="definition">map</span></a> (<a class="idref" href="index.html#concat"><span class="id" title="definition">concat</span></a> <span class="id" title="var">_</span> <a class="idref" href="index.html#l:79"><span class="id" title="variable">l</span></a> <a class="idref" href="index.html#m:80"><span class="id" title="variable">m</span></a>) <a class="idref" href="http://coq.inria.fr/distrib/V8.16.1/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="index.html#concat"><span class="id" title="definition">concat</span></a> <span class="id" title="var">_</span> (<a class="idref" href="index.html#map"><span class="id" title="definition">map</span></a> <a class="idref" href="index.html#l:79"><span class="id" title="variable">l</span></a>) (<a class="idref" href="index.html#map"><span class="id" title="definition">map</span></a> <a class="idref" href="index.html#m:80"><span class="id" title="variable">m</span></a>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+<span class="id" title="tactic">elim</span>: <span class="id" title="var">l</span>.<br/>
++ <span class="id" title="tactic">rewrite</span> /=.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">by</span> [].<br/>
++ <span class="id" title="tactic">move</span>⇒ <span class="id" title="var">a</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">move</span>⇒ <span class="id" title="var">l'</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">move</span>⇒ <span class="id" title="var">IH</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> /=.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <span class="id" title="var">IH</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">by</span> [].<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="index.html#MapList"><span class="id" title="section">MapList</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Section</span> <a id="MoreList" class="idref" href="#MoreList"><span class="id" title="section">MoreList</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Variable</span> (<a id="MoreList.A" class="idref" href="#MoreList.A"><span class="id" title="variable">A</span></a> : <span class="id" title="keyword">Type</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="concat_append'" class="idref" href="#concat_append'"><span class="id" title="lemma">concat_append'</span></a> (<a id="a:82" class="idref" href="#a:82"><span class="id" title="binder">a</span></a> : <a class="idref" href="index.html#MoreList.A"><span class="id" title="variable">A</span></a>) (<a id="l:83" class="idref" href="#l:83"><span class="id" title="binder">l</span></a> <a id="m:84" class="idref" href="#m:84"><span class="id" title="binder">m</span></a> : <a class="idref" href="index.html#list"><span class="id" title="inductive">list</span></a> <a class="idref" href="index.html#MoreList.A"><span class="id" title="variable">A</span></a>) : <br/>
+<a class="idref" href="index.html#append"><span class="id" title="definition">append</span></a> <span class="id" title="var">_</span> <a class="idref" href="index.html#a:82"><span class="id" title="variable">a</span></a> (<a class="idref" href="index.html#concat"><span class="id" title="definition">concat</span></a> <span class="id" title="var">_</span> <a class="idref" href="index.html#l:83"><span class="id" title="variable">l</span></a> <a class="idref" href="index.html#m:84"><span class="id" title="variable">m</span></a>) <a class="idref" href="http://coq.inria.fr/distrib/V8.16.1/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="index.html#concat"><span class="id" title="definition">concat</span></a> <span class="id" title="var">_</span> <a class="idref" href="index.html#l:83"><span class="id" title="variable">l</span></a> (<a class="idref" href="index.html#append"><span class="id" title="definition">append</span></a> <span class="id" title="var">_</span> <a class="idref" href="index.html#a:82"><span class="id" title="variable">a</span></a> <a class="idref" href="index.html#m:84"><span class="id" title="variable">m</span></a>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+<span class="id" title="tactic">elim</span>: <span class="id" title="var">l</span>.<br/>
++ <span class="id" title="tactic">rewrite</span> /=.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">by</span> [].<br/>
++ <span class="id" title="tactic">move</span>⇒ <span class="id" title="var">b</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">move</span>⇒ <span class="id" title="var">l'</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">move</span>⇒ <span class="id" title="var">IH</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> /=.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <span class="id" title="var">IH</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">by</span> [].<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="index.html#MoreList"><span class="id" title="section">MoreList</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab5"></a><h2 class="section">Some links</h2>
+
+One can check this page:
+https://bevis.w.uib.no/
+
+<div class="paragraph"> </div>
+
+Feel free to ask me any question around the proof assistant, in-person or by sending me an e-mail.
+One can find lots of technical information about the Coq proof assistant here:
+https://coq.inria.fr/doc/
+
+<div class="paragraph"> </div>
+
+You probably first need to pick a version of Coq you want to use and click on "User manual".
+The online community use some channels where beginners can search for previous messages and ask questions. You can find more information about these channels here:
+https://coq.inria.fr/community 
+<div class="paragraph"> </div>
+
+<a id="lab6"></a><h2 class="section">Credit</h2>
+
+This web page is hosted on the Norwegian Research and Education Cloud, NREC :)
+The position of the author is funded by the Research Council of Norway, Norges forskningsrådet (through the project Symboalgo).
+This web page uses a template kindly made by Emilio Jesús Gallego Arias and available here:
+https://github.com/jscoq/coqdoc-template
+This template offers a quick way to use jsCoq. The latter let us try some Coq code in web browsers, which I hope is more koselig.
+
+<div class="paragraph"> </div>
+
+The cheatsheet is a modification of the cheatsheet made available by Enrico Tassi, here:
+https://github.com/gares/math-comp-school-2022/commits/master/cheat-sheet 
+<div class="paragraph"> </div>
+
+<a id="lab7"></a><h1 class="section">Feedback, please!</h1>
+
+I would like to listen to or read your feedback!
+You can also write directly there:
+https://docs.google.com/document/d/13Ec6Ybij6PLfIn1_Vgr8lKqa7lsfibrKHioBBiZdy_0/edit?usp=sharing
+
+<div class="paragraph"> </div>
+
+This tutorial targets PhD students in informatics. 
+
+<div class="paragraph"> </div>
+
+If there there were no talk, what written information would be missing to understand?
+
+<div class="paragraph"> </div>
+
+In a 3-page limit tutorial about Coq, what would you like to see or learn? 
+</div>
+<div class="code">
+</div>
+
+</div>
+</div>
+</body>
+</html>
